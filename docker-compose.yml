@@ -9,4 +9,26 @@ services:
     ports:
       - "8009:8000"
     env_file:
-      - .env.dev
+      - .env
+    networks:
+      - django-network
+  postgres:
+    image: postgres:14.4
+    container_name: postgres_django
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: '${DB_USER}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}'
+      POSTGRES_DB: '${DB_NAME}'
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - django-network
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  django-network:
+    driver: bridge
